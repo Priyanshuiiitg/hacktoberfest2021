@@ -1,54 +1,82 @@
-#include<bits/stdc++.h>
-#include<vector>
-#define MAX 100000
+#include <bits/stdc++.h>
+#define vi vector<int>
 using namespace std;
+void merge(vi &v,int e,int b,int a,int c,int r)
+{
+    vi v1,v2,v3,v4;
+    for(int i=0;i<b-e+1;i++)
+    v1.push_back(v[e+i]);
+    for(int j=0;j<a-b;j++)
+    v2.push_back(v[b+j+1]);
+    for(int j=0;j<c-a;j++)
+    v3.push_back(v[j+a+1]);
+    for(int j=0;j<r-c;j++)
+    v4.push_back(v[c+j+1]);
 
-void merge(vector<int> &a, vector<int> &b, vector<int> &toreturn){ //You are given two sorted arrays A and B. You want to merge these arrays and return a sorted vector will elements from both arrays.
-    int apointer = 0, bpointer = 0; //point to the first element in the vectors
-    //That hasn't been taken yet
-    while(apointer<a.size() && bpointer<b.size()){
-        if(a[apointer]<=b[bpointer]){
-            toreturn.push_back(a[apointer++]);
-        }
-        else{ //b[bpointer] < a[apointer]
-//            inv += (a.size() - apointer);
-            toreturn.push_back(b[bpointer++]);
-        }
+
+    v1.push_back(INT_MAX);
+    v2.push_back(INT_MAX);
+    v3.push_back(INT_MAX);
+    v4.push_back(INT_MAX);
+
+    int i=0,j=0,k=0,l=0;
+    vector<int> x;
+    while(i<v1.size() && j<v2.size() && k<v3.size() && l<v4.size())
+    {
+        if(v1[i]==INT_MAX && v2[j]==INT_MAX && v3[k]==INT_MAX  && v4[l]==INT_MAX)
+        break;
+        else if(v1[i]<v2[j] && v1[i]<v3[k] && v1[i]<v4[l])
+       { x.push_back(v1[i]);
+i++;
+       }
+        else if(v1[i]>v2[j] && v2[j]<v3[k] && v2[j]<v4[l])
+      {  x.push_back(v2[j]);
+j++;
+      }
+      else if(v1[i]>v3[k] && v2[j]>v3[k] && v4[l]>v3[k])
+      {
+        x.push_back(v3[k]);
+        k++;
+
+      }
+      else
+      {
+        x.push_back(v4[l]);
+        l++;
+      }
+
     }
-    while(apointer<a.size()) toreturn.push_back(a[apointer++]);
-    while(bpointer<b.size()) toreturn.push_back(b[bpointer++]);
+  
+   for(int i=0;i<x.size();i++)
+   {
+    v[e+i]=x[i];
+
+   }
 }
+void mergesort(vi &v,int l,int h)
+{
+    if(l<h)
+    {
+        int a=(l+h)/2;
+        int b=(a+l)/2;
+        int c=(a+h)/2;
 
-void ms(int arr[], int s, int e){
-//	cout<<s<<" "<<e<<endl;
-	if(s==e){// there is only one or no element
-		return;
-	}
-	int mid = (s+e)/2;
-	ms(arr, s, mid);
-	ms(arr, mid+1, e);
-	
-	// Now arr[] has two sorted parts inside it. 
-	// We have to take them out, merge the two parts and 
-	// then resassign the values to arr[]
-	vector<int> a,b;
-	for(int i=s; i<=mid; i++) a.push_back(arr[i]);
-	for(int i=mid+1; i<=e; i++) b.push_back(arr[i]);  
-	
-	vector<int> temp;
-	merge(a,b, temp);
-	for(int i=0; i<temp.size(); i++){
-		arr[s+i] = temp[i];
-	}
+       
+        mergesort(v,l,b);
+        mergesort(v,b+1,a);
+        mergesort(v,a+1,c);
+        mergesort(v,c+1,h);
+        merge(v,l,b,a,c,h);
+
+    }
 }
+int main(int argc, char const *argv[])
+{
 
+vector<int> v={23,1,100,987,-100,0,56};
+mergesort(v,0,v.size()-1);
+for(int i=0;i<v.size();i++)
+cout<<v[i]<<" ";
 
-
-int main(){
-	int n; cin>>n; 
-	int arr[n];
-	for(int i=0; i<n; i++) cin>>arr[i];
-	ms(arr, 0, n-1);
-	for(int i=0; i<n; i++) cout<<arr[i]<<" ";
-	cout<<endl;
+    return 0;
 }
