@@ -1,54 +1,43 @@
-#include<bits/stdc++.h>
-#include<vector>
-#define MAX 100000
+#include <bits/stdc++.h>
 using namespace std;
+vector<int>  merge(vector<int> &v1,vector<int> &v2)
+{
+   v1.push_back(INT_MAX);
+   v2.push_back(INT_MAX);
+   vector<int> v;
+   int i=0,j=0;
+   while(i<v1.size() && j<v2.size())
+   {
+    if(v1[i]==INT_MAX && v2[j]==INT_MAX)
+    break;
 
-void merge(vector<int> &a, vector<int> &b, vector<int> &toreturn){ //You are given two sorted arrays A and B. You want to merge these arrays and return a sorted vector will elements from both arrays.
-    int apointer = 0, bpointer = 0; //point to the first element in the vectors
-    //That hasn't been taken yet
-    while(apointer<a.size() && bpointer<b.size()){
-        if(a[apointer]<=b[bpointer]){
-            toreturn.push_back(a[apointer++]);
-        }
-        else{ //b[bpointer] < a[apointer]
-//            inv += (a.size() - apointer);
-            toreturn.push_back(b[bpointer++]);
-        }
-    }
-    while(apointer<a.size()) toreturn.push_back(a[apointer++]);
-    while(bpointer<b.size()) toreturn.push_back(b[bpointer++]);
+    if(v1[i]<v2[j])
+   { v.push_back(v1[i]);
+   i++;
+
+   }
+   else
+   {
+    v.push_back(v2[j]);
+    j++;
+
+   }
+
+
+   }
+   return v;
+
+}
+int main(int argc, char const *argv[])
+{
+vector<int> v1={1,2,5,9,11};
+vector<int> v2={3,4,6,10,12};
+vector<int> v=merge(v1,v2);
+for(int i=0;i<v.size();i++)
+{
+    cout<<v[i]<<" ";
+
 }
 
-void ms(int arr[], int s, int e){
-//	cout<<s<<" "<<e<<endl;
-	if(s==e){// there is only one or no element
-		return;
-	}
-	int mid = (s+e)/2;
-	ms(arr, s, mid);
-	ms(arr, mid+1, e);
-	
-	// Now arr[] has two sorted parts inside it. 
-	// We have to take them out, merge the two parts and 
-	// then resassign the values to arr[]
-	vector<int> a,b;
-	for(int i=s; i<=mid; i++) a.push_back(arr[i]);
-	for(int i=mid+1; i<=e; i++) b.push_back(arr[i]);  
-	
-	vector<int> temp;
-	merge(a,b, temp);
-	for(int i=0; i<temp.size(); i++){
-		arr[s+i] = temp[i];
-	}
-}
-
-
-
-int main(){
-	int n; cin>>n; 
-	int arr[n];
-	for(int i=0; i<n; i++) cin>>arr[i];
-	ms(arr, 0, n-1);
-	for(int i=0; i<n; i++) cout<<arr[i]<<" ";
-	cout<<endl;
+    return 0;
 }
